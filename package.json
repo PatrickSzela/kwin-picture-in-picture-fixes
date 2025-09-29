@@ -1,0 +1,37 @@
+{
+  "name": "kwin-picture-in-picture-fixes",
+  "prettyName": "Picture-in-Picture Fixes",
+  "version": "1.0.0",
+  "description": "Fixes some issues related to Picture-in-Picture (PiP) windows like positioning, focus stealing and more",
+  "homepage": "https://github.com/PatrickSzela/kwin-picture-in-picture-fixes",
+  "private": true,
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "npm run clean && npm run build && npm run build:prepare && npm run build:install",
+    "check": "tsc -b --noEmit",
+    "build": "tsc && vite build",
+    "build:prepare": "./bin/prepare.sh",
+    "build:package": "./bin/package.sh",
+    "build:install": "./bin/install.sh",
+    "clean": "rm -rf ./build || true"
+  },
+  "keywords": [],
+  "author": "Patryk Szela",
+  "license": "MIT",
+  "packageManager": "pnpm@10.17.0",
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/runtime": "^7.28.4",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

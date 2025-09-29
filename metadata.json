@@ -1,0 +1,19 @@
+{
+  "KPlugin": {
+    "Name": "$prettyName",
+    "Description": "$description",
+    "Icon": "preferences-system-windows",
+    "Id": "$name",
+    "Website": "$homepage",
+    "License": "$license",
+    "Version": "$version",
+    "Authors": [
+      {
+        "Name": "$author"
+      }
+    ]
+  },
+  "X-Plasma-API": "javascript",
+  "X-Plasma-MainScript": "code/main.js",
+  "KPackageStructure": "KWin/Script"
+}
