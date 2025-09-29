@@ -19,7 +19,8 @@ Script has been tested with Firefox and Chrome, but it should work with any appl
 > [!NOTE]
 > This script is not yet available on the KDE Store, but that might change in the future
 
-Download the most recent release from the [Releases tab]()
+1. Download the most recent release from the [Releases tab](https://github.com/PatrickSzela/kwin-picture-in-picture-fixes/releases/latest)
+2. Install the script by pressing the _Install from File..._ button under _System Settings_ > _Window Management_ > _KWin Scripts_ and selecting the downloaded release
 
 ## Building
 
