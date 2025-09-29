@@ -6,4 +6,4 @@ VERSION=$(jq -r '.version' ./package.json)
 
 mkdir -p builds
 
-tar -czvf "builds/${NAME}-${VERSION}.tar.gz" -C ./dist .
+7z a -tzip "builds/${NAME}-${VERSION}.kwinscript" ./dist
