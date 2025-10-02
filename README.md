@@ -19,8 +19,12 @@ Script has been tested with Firefox and Chrome, but it should work with any appl
 > [!NOTE]
 > This script is not yet available on the KDE Store, but that might change in the future
 
-1. Download the most recent release from the [Releases tab](https://github.com/PatrickSzela/kwin-picture-in-picture-fixes/releases/latest)
-2. Install the script by pressing the _Install from File..._ button under _System Settings_ > _Window Management_ > _KWin Scripts_ and selecting the downloaded release
+1. Download the most recent release (`.kwinscript` file) from [Releases](https://github.com/PatrickSzela/kwin-picture-in-picture-fixes/releases)
+2. Install the script by pressing the _Install from File..._ button under _System Settings_ > _Window Management_ > _KWin Scripts_ and selecting the downloaded file
+
+## Uninstallation
+
+1. Delete the script under _System Settings_ > _Window Management_ > _KWin Scripts_
 
 ## Building
 
@@ -28,10 +32,6 @@ Script has been tested with Firefox and Chrome, but it should work with any appl
 2. Install the required dependencies: `pnpm i`
 3. Build and install the script: `pnpm run dev`
 4. Make sure the script is installed and enabled under _System Settings_ > _Window Management_ > _KWin Scripts_
-
-## Uninstallation
-
-1. Delete the script under _System Settings_ > _Window Management_ > _KWin Scripts_
 
 ## Roadmap
 
