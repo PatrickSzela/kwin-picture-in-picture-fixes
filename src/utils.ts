@@ -196,7 +196,10 @@ export function getInitialPlacement(
 
 export function isFullscreenWindowOnScreen(screen: KWin.Output) {
   const windows = [...workspace.stackingOrder].reverse();
-  const window = windows.find((i) => i.output === screen && !i.specialWindow);
+  // we check for `caption` because sometimes `stackingOrder` contains a weird non-existing window that has every property empty except for PID (even though process with that PID doesn't exists)
+  const window = windows.find(
+    (i) => i.output === screen && !i.specialWindow && i.caption,
+  );
   return !!window?.fullScreen;
 }
 
