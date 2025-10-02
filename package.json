@@ -14,7 +14,7 @@
     "build:prepare": "./bin/prepare.sh",
     "build:package": "./bin/package.sh",
     "build:install": "./bin/install.sh",
-    "clean": "rm -rf ./build || true"
+    "clean": "rm -rf ./dist || true"
   },
   "keywords": [],
   "author": "Patryk Szela",
