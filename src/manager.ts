@@ -9,6 +9,7 @@ import {
   getScreensClientArea,
   isHovered,
   isPipWindow,
+  isProperWindow,
   rectCenter,
   screenName,
 } from "./utils";
@@ -113,8 +114,7 @@ export class Manager {
 
     if (
       this.activeWindow === window &&
-      this._prevActiveWindow &&
-      !isHovered(window)
+      isProperWindow(this._prevActiveWindow)
     ) {
       // focus stealing prevention when PiP window opens
       console.info(
@@ -154,7 +154,13 @@ export class Manager {
 
   protected onWindowActivated(window: KWin.Window) {
     this.moveAllAutomaticallyMoveableWindows();
-    if (this._prevActiveWindow !== window) this._prevActiveWindow = window;
+    if (
+      this._prevActiveWindow !== window &&
+      isProperWindow(window) &&
+      !isPipWindow(window)
+    ) {
+      this._prevActiveWindow = window;
+    }
   }
 
   protected onWindowFullscreenChanged(
