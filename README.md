@@ -14,6 +14,10 @@ A KWin script that fixes some issues related to Picture-in-Picture (PiP) windows
 
 Script has been tested with Firefox and Chrome, but it should work with any application that sets the tag of the PiP window to `pip` or its title contains `Picture-in-Picture` or `Picture in Picture` (case insensitive), and it has no border and title bar
 
+## Requirements
+
+- KDE Plasma 6.4 or higher <small>(could work on lower versions, but hasn't been tested)</small>
+
 ## Installation
 
 > [!NOTE]
