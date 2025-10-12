@@ -31,6 +31,8 @@ export class Manager {
    * This could be caused by the user moving the window with a keyboard shortcut, monitor being turned off/disabled etc.
    */
   protected _windowsMovedByKWin: Set<StackableWindow> = new Set();
+  /** Whether we allow for the PiP window to gain focus when it isn't hovered */
+  protected _allowFocusStealing: boolean = false;
 
   protected error = {
     stackMissing: (screen: KWin.Output, corner: Qt.Corner) => {
@@ -111,19 +113,6 @@ export class Manager {
     }
 
     this.attachWindow(w, screen, corner, true);
-
-    if (
-      this.activeWindow === window &&
-      isProperWindow(this._prevActiveWindow)
-    ) {
-      // focus stealing prevention when PiP window opens
-      console.info(
-        `Prevented focus stealing, restoring focus to window`,
-        `"${this._prevActiveWindow.caption}"`,
-      );
-      this.activeWindow = this._prevActiveWindow;
-    }
-
     this.update();
   }
 
@@ -140,6 +129,7 @@ export class Manager {
     if (isHovered(window) && this.isWindowAttached(w)) {
       const stack = this.getStack(w.screen, w.corner);
       if (stack && stack.windows.length > 1) {
+        this._allowFocusStealing = true;
         this.activeWindow = stack.windows.filter((i) => i !== w)[0]!.window;
       }
     }
@@ -154,12 +144,27 @@ export class Manager {
 
   protected onWindowActivated(window: KWin.Window) {
     this.moveAllAutomaticallyMoveableWindows();
-    if (
-      this._prevActiveWindow !== window &&
-      isProperWindow(window) &&
-      !isPipWindow(window)
-    ) {
-      this._prevActiveWindow = window;
+
+    if (this._prevActiveWindow !== window && isProperWindow(window)) {
+      if (isPipWindow(window)) {
+        // KWin (?) sometimes insists on focusing PiP window after its creation
+        // even after we reassign focus to a different window ourselves...
+        // So let's just assume that when the PiP window isn't hovered when it gains focus,
+        // it's trying to steal it for itself, which we do not want :)
+        if (!isHovered(window) && this._prevActiveWindow) {
+          if(!this._allowFocusStealing) {
+            console.info(
+              `Prevented focus stealing, restoring focus to window`,
+              `"${this._prevActiveWindow.caption}"`,
+            );
+            this.activeWindow = this._prevActiveWindow;
+          } else {
+            this._allowFocusStealing = false;
+          }
+        }
+      } else {
+        this._prevActiveWindow = window;
+      }
     }
   }
 
