@@ -167,7 +167,7 @@ export function getCornerNeighbor(
   screen: KWin.Output,
   corner: Qt.Corner,
   allowOtherDirections: boolean = false,
-  allowOverFullscreenWindow: boolean = false,
+  allowScreensWithFullscreenWindows: boolean = false,
 ) {
   let corners: Qt.Corner[] = [
     corner,
@@ -177,30 +177,42 @@ export function getCornerNeighbor(
   for (const c of corners) {
     let bestScreens = getScreensInDirection(screen, c);
 
-    if (!allowOverFullscreenWindow)
+    if (!allowScreensWithFullscreenWindows)
       bestScreens = bestScreens.filter(([i]) => !isFullscreenWindowOnScreen(i));
 
     if (bestScreens[0]) return bestScreens[0];
   }
 }
 
-export function getCornerThatHasNeighbor(
+export function getCornersThatHaveNeighbor(
   screen: KWin.Output,
-  corner: Qt.Corner = DEFAULT_CORNER,
+  startingCorner: Qt.Corner = DEFAULT_CORNER,
+  allowScreensWithFullscreenWindows = false,
 ) {
-  for (const c of [corner, ...getOppositeCorners(corner)])
-    if (getCornerNeighbor(screen, c)) return c;
-
-  return corner;
+  return [startingCorner, ...getOppositeCorners(startingCorner)].filter((i) =>
+    getCornerNeighbor(screen, i, false, allowScreensWithFullscreenWindows),
+  );
 }
 
 export function getInitialPlacement(
   window: KWin.Window,
   activeScreen: KWin.Output,
 ) {
-  let data = [window.output, getCornerThatHasNeighbor(window.output)] as const;
-  if (window.output === activeScreen) data = getCornerNeighbor(...data) || data;
-  return data;
+  const screen = window.output;
+
+  let data = getCornersThatHaveNeighbor(screen, DEFAULT_CORNER, true).map(
+    (i) => [screen, i] as const,
+  );
+
+  if (screen === activeScreen)
+    data = data.map((i) => getCornerNeighbor(i[0], i[1]) ?? i);
+
+  const helper = (screen: KWin.Output) =>
+    Number(screen === activeScreen) +
+    Number(isFullscreenWindowOnScreen(screen));
+  data = data.sort(([a], [b]) => helper(a) - helper(b));
+
+  return data[0] ?? [screen, DEFAULT_CORNER];
 }
 
 export function isFullscreenWindowOnScreen(screen: KWin.Output) {
