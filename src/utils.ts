@@ -12,6 +12,7 @@ export function isProperWindow(window: any): window is KWin.Window {
   return (
     typeof window === "object" &&
     typeof window.resourceName === "string" &&
+    !window.deleted &&
     window.resourceName.trim().length &&
     (!window.specialWindow || window.dock)
   );
