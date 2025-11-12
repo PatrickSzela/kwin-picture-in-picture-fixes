@@ -1,7 +1,7 @@
 {
   "name": "kwin-picture-in-picture-fixes",
   "prettyName": "Picture-in-Picture Fixes",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Fixes some issues related to Picture-in-Picture (PiP) windows like positioning, focus stealing and more",
   "homepage": "https://github.com/PatrickSzela/kwin-picture-in-picture-fixes",
   "private": true,
