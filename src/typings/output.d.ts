@@ -43,7 +43,7 @@ declare namespace KWin {
 
   export class Output {
     // ### Read-only Properties
-    readonly geometry: QRect;
+    readonly geometry: KWin.Rect;
     readonly devicePixelRatio: qreal;
     readonly name: QString;
     readonly manufacturer: QString;

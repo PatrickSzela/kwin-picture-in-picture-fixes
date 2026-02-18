@@ -19,9 +19,9 @@ declare namespace KWin {
   export class Window {
     // ### Read-only Properties
     /** This property holds rectangle that the pixmap or buffer of this Window occupies on the screen. This rectangle includes invisible portions of the window, e.g. client-side drop shadows, etc. */
-    readonly bufferGeometry: QRectF;
+    readonly bufferGeometry: KWin.RectF;
     /** The geometry of the Window without frame borders. */
-    readonly clientGeometry: QRectF;
+    readonly clientGeometry: KWin.RectF;
     /** This property holds the position of the Window's frame geometry. */
     readonly pos: QPointF;
     /** This property holds the size of the Window's frame geometry. */
@@ -36,7 +36,7 @@ declare namespace KWin {
     readonly height: qreal;
     /** The output where the window center is on */
     readonly output: KWin.Output;
-    readonly rect: QRectF;
+    readonly rect: KWin.RectF;
     readonly resourceName: QString;
     readonly resourceClass: QString;
     readonly windowRole: QString;
@@ -102,7 +102,7 @@ declare namespace KWin {
     /** Whether the Window can be minimized. The property is evaluated each time it is invoked. Because of that there is no notify signal. */
     readonly minimizable: bool;
     /** The optional geometry representing the minimized Window in e.g a taskbar. See _NET_WM_ICON_GEOMETRY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html . The value is evaluated each time the getter is called. Because of that no changed signal is provided. */
-    readonly iconGeometry: QRectF;
+    readonly iconGeometry: KWin.RectF;
     /** Returns whether the window is any of special windows types (desktop, dock, splash, ...), i.e. window types that usually don't have a window frame and the user does not use window management (moving, raising,...) on them. The value is evaluated each time the getter is called. Because of that no changed signal is provided. */
     readonly specialWindow: bool;
     /** The Caption of the Window. Read from WM_NAME property together with a suffix for hostname and shortcut. To read only the caption as provided by WM_NAME, use the getter with an additional false value. */
@@ -186,7 +186,7 @@ declare namespace KWin {
     /** Whether window state _NET_WM_STATE_DEMANDS_ATTENTION is set. This state indicates that some action in or with the window happened. For example, it may be set by the Window Manager if the window requested activation but the Window Manager refused it, or the application may set it if it finished some work. This state may be set by both the Window and the Window Manager. It should be unset by the Window Manager when it decides the window got the required attention (usually, that it got activated). */
     demandsAttention: bool;
     /** The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged signal might be emitted at each resize step or only at the end of the resize operation. */
-    frameGeometry: QRectF;
+    frameGeometry: KWin.RectF;
     /** Whether the window has a decoration or not. This property is not allowed to be set by applications themselves. The decision whether a window has a border or not belongs to the window manager. If this property gets abused by application developers, it will be removed again. */
     noBorder: bool;
     /** The Tile this window is associated to, if any */
@@ -215,11 +215,11 @@ declare namespace KWin {
     /** Emitted whenever the window's shadow changes. 5.15 */
     readonly shadowChanged: Signal<() => void>;
     /** This signal is emitted when the Window's buffer geometry changes. */
-    readonly bufferGeometryChanged: Signal<(oldGeometry: QRectF) => void>;
+    readonly bufferGeometryChanged: Signal<(oldGeometry: KWin.RectF) => void>;
     /** This signal is emitted when the Window's frame geometry changes. */
-    readonly frameGeometryChanged: Signal<(oldGeometry: QRectF) => void>;
+    readonly frameGeometryChanged: Signal<(oldGeometry: KWin.RectF) => void>;
     /** This signal is emitted when the Window's client geometry has changed. */
-    readonly clientGeometryChanged: Signal<(oldGeometry: QRectF) => void>;
+    readonly clientGeometryChanged: Signal<(oldGeometry: KWin.RectF) => void>;
     /** This signal is emitted when the frame geometry is about to change. the new geometry is not known yet */
     readonly frameGeometryAboutToChange: Signal<() => void>;
     /** This signal is emitted when the visible geometry has changed. */
@@ -251,7 +251,7 @@ declare namespace KWin {
     readonly moveResizedChanged: Signal<() => void>;
     readonly moveResizeCursorChanged: Signal<(CursorShape) => void>;
     readonly interactiveMoveResizeStarted: Signal<() => void>;
-    readonly interactiveMoveResizeStepped: Signal<(geometry: QRectF) => void>;
+    readonly interactiveMoveResizeStepped: Signal<(geometry: KWin.RectF) => void>;
     readonly interactiveMoveResizeFinished: Signal<() => void>;
     readonly closeableChanged: Signal<(bool) => void>;
     readonly minimizeableChanged: Signal<(bool) => void>;

@@ -9,6 +9,16 @@ declare const workspace: KWin.WorkspaceWrapper;
 /** Provides access to enums defined in KWin::WorkspaceWrapper */
 
 declare namespace KWin {
+  /** The Rect class defines a rectangle in the plane using integer precision. */
+  declare class Rect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }
+  /** The RectF class defines a finite rectangle in the plane using floating point precision. */
+  declare type RectF = KWin.Rect;
+
   // source: https://github.com/KDE/kwin/blob/master/src/core/outputconfiguration.h
   // TODO: implement
   type OutputChangeSet = any;

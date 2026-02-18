@@ -2,6 +2,7 @@ import { Stack } from "./stack";
 import { StackableWindow, type StackableWindowStack } from "./stackableWindow";
 import { Qt } from "./typings/qt";
 import {
+  addMissingPropertiesToRect,
   detectEdgeWindowIsTouching,
   getCornerNeighbor,
   getCornersFromEdge,
@@ -152,7 +153,7 @@ export class Manager {
         // So let's just assume that when the PiP window isn't hovered when it gains focus,
         // it's trying to steal it for itself, which we do not want :)
         if (!isHovered(window) && this._prevActiveWindow) {
-          if(!this._allowFocusStealing) {
+          if (!this._allowFocusStealing) {
             console.info(
               `Prevented focus stealing, restoring focus to window`,
               `"${this._prevActiveWindow.caption}"`,
@@ -226,7 +227,7 @@ export class Manager {
 
   protected onWindowFrameGeometryChanged(
     window: KWin.Window,
-    frameGeometry: QRect,
+    frameGeometry: KWin.RectF,
   ) {
     if (!isPipWindow(window)) return;
     const w = this.findWindow(window);
@@ -365,7 +366,9 @@ export class Manager {
       const stackPos = corners.map((i, idx) => {
         const windows = this.getStack(window.output, i)?.windows.reverse();
         if (!windows?.[0]) return clientArea[!idx ? "top" : "bottom"];
-        return windows?.[0]?.window.frameGeometry[!idx ? "bottom" : "top"];
+        return addMissingPropertiesToRect(windows?.[0]?.window.frameGeometry)[
+          !idx ? "bottom" : "top"
+        ];
       }) as [number, number];
 
       const stackCenter = stackPos[0] + (stackPos[1] - stackPos[0]) / 2;

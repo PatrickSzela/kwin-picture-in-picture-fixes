@@ -11,9 +11,7 @@ const PIP_TITLES = ["picture-in-picture", "picture in picture"];
 export function isProperWindow(window: any): window is KWin.Window {
   return (
     typeof window === "object" &&
-    typeof window.resourceName === "string" &&
     !window.deleted &&
-    window.resourceName.trim().length &&
     (!window.specialWindow || window.dock)
   );
 }
@@ -29,6 +27,24 @@ export function isPipWindow(window: KWin.Window) {
   return PIP_TITLES.some((i) => title.includes(i));
 }
 
+export function addMissingPropertiesToRect(rect: QRect | KWin.Rect): QRect {
+  return {
+    ...rect,
+    get left() {
+      return "left" in rect ? rect.left : rect.x;
+    },
+    get right() {
+      return "right" in rect ? rect.right : rect.x + rect.width - 1;
+    },
+    get top() {
+      return "top" in rect ? rect.top : rect.y;
+    },
+    get bottom() {
+      return "bottom" in rect ? rect.bottom : rect.y + rect.height - 1;
+    },
+  };
+}
+
 export function hasBorder(window: KWin.Window) {
   // we need to check this manually since there doesn't seem to be a `hasBorder` property in KWin's API (except for `noBorder`, but even with a PiP window not having a border, it's set to false)
   return (
@@ -41,14 +57,14 @@ export function screenName(screen: KWin.Output) {
   return `${screen.manufacturer} ${screen.model} (${screen.name})`;
 }
 
-export function rectCenter({ x, y, height, width }: QRect | QRectF): QPoint {
+export function rectCenter({ x, y, height, width }: KWin.Rect): QPoint {
   return {
     x: x + width / 2,
     y: y + height / 2,
   };
 }
 
-export function rectLocalCenter({ height, width }: QRect | QRectF): QPoint {
+export function rectLocalCenter({ height, width }: KWin.Rect): QPoint {
   return {
     x: width / 2,
     y: height / 2,
@@ -87,7 +103,7 @@ export function findTouchedEdge(p1: QRect, p2: QRect) {
 
 export function detectEdgeWindowIsTouching(window: KWin.Window) {
   return findTouchedEdge(
-    window.frameGeometry,
+    addMissingPropertiesToRect(window.frameGeometry),
     getScreensClientArea(window.output),
   );
 }
@@ -119,13 +135,14 @@ export function getRectCornerPosition(rect: QRect, corner: Qt.Corner): QPoint {
 }
 
 export function getScreensInDirection(screen: KWin.Output, corner: Qt.Corner) {
-  const sG = screen.geometry;
+  const sG = addMissingPropertiesToRect(screen.geometry);
+  const sC = rectCenter(sG);
   let screens: [KWin.Output, Qt.Corner][] = [];
 
   for (const i of workspace.screens) {
     if (i === screen) continue;
 
-    const iG = i.geometry;
+    const iG = addMissingPropertiesToRect(i.geometry);
     const oppositeCorners = getOppositeCorners(corner);
     let direction: [Boolean, Boolean] = [false, false];
 
@@ -154,8 +171,6 @@ export function getScreensInDirection(screen: KWin.Output, corner: Qt.Corner) {
 
     screens = [...screens, [i, finalCorner]];
   }
-
-  const sC = rectCenter(screen.geometry);
 
   return screens.sort(([a], [b]) => {
     const [aC, bC] = [rectCenter(a.geometry), rectCenter(b.geometry)];
@@ -224,7 +239,9 @@ export function isFullscreenWindowOnScreen(screen: KWin.Output) {
 
 export function isHovered(window: KWin.Window) {
   // naive detection if removed window was hovered when removing it
-  const { bottom, left, right, top } = window.frameGeometry;
+  const { bottom, left, right, top } = addMissingPropertiesToRect(
+    window.frameGeometry,
+  );
   const { x, y } = workspace.cursorPos;
   return x >= left && x <= right && y >= top && y <= bottom;
 }

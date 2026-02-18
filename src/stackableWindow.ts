@@ -15,7 +15,7 @@ export class StackableWindow {
   /** Information about stack to which this Stackable Window was assigned to by user's interaction (moving window). */
   public userStack: StackableWindowStack | null = null;
   /** Window's `frameGeometry` cache because setting window's real `frameGeometry` is delayed until next "tick". */
-  protected _frameGeometry: QRect;
+  protected _frameGeometry: KWin.RectF;
 
   constructor(window: KWin.Window) {
     this._window = window;
@@ -52,7 +52,7 @@ export class StackableWindow {
     return this._frameGeometry;
   }
 
-  set frameGeometry(value: QRect) {
+  set frameGeometry(value: KWin.RectF) {
     this._window.frameGeometry = value;
   }
 
@@ -67,7 +67,7 @@ export class StackableWindow {
   }
 
   move(pos: QPoint) {
-    this._frameGeometry = { ...this._frameGeometry, ...pos } as QRect;
+    this._frameGeometry = { ...this._frameGeometry, ...pos } as KWin.RectF;
   }
 
   resize(size: QSize) {
@@ -94,7 +94,7 @@ export class StackableWindow {
       data.width = data.height * ratio;
     }
 
-    this._frameGeometry = { ...this._frameGeometry, ...data } as QRect;
+    this._frameGeometry = { ...this._frameGeometry, ...data } as KWin.RectF;
   }
 
   update() {
