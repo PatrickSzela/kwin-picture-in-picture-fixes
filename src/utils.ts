@@ -12,7 +12,7 @@ export function isProperWindow(window: any): window is KWin.Window {
   return (
     typeof window === "object" &&
     !window.deleted &&
-    (!window.specialWindow || window.dock)
+    (window.normalWindow || window.dock)
   );
 }
 
