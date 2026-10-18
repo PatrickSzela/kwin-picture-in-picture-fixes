@@ -248,7 +248,9 @@ export function isHovered(window: KWin.Window) {
 
 export function getScreensClientArea(screen: KWin.Output) {
   const { currentDesktop } = workspace;
-  return workspace.clientArea(KWin.PlacementArea, screen, currentDesktop);
+  return addMissingPropertiesToRect(
+    workspace.clientArea(KWin.PlacementArea, screen, currentDesktop),
+  );
 }
 
 export function getRatio(rect: QSize) {
