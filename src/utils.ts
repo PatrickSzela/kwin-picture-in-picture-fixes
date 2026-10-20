@@ -27,20 +27,24 @@ export function isPipWindow(window: KWin.Window) {
   return PIP_TITLES.some((i) => title.includes(i));
 }
 
+/**
+ * Compared to QRect's built in properties (which KWin.Rect doesn't have),
+ * these overrides do not subtract 1 from final values.
+ */
 export function addMissingPropertiesToRect(rect: QRect | KWin.Rect): QRect {
   return {
     ...rect,
     get left() {
-      return "left" in rect ? rect.left : rect.x;
+      return rect.x;
     },
     get right() {
-      return "right" in rect ? rect.right : rect.x + rect.width - 1;
+      return rect.x + rect.width;
     },
     get top() {
-      return "top" in rect ? rect.top : rect.y;
+      return rect.y;
     },
     get bottom() {
-      return "bottom" in rect ? rect.bottom : rect.y + rect.height - 1;
+      return rect.y + rect.height;
     },
   };
 }
@@ -137,27 +141,27 @@ export function getRectCornerPosition(rect: QRect, corner: Qt.Corner): QPoint {
 export function getScreensInDirection(screen: KWin.Output, corner: Qt.Corner) {
   const sG = addMissingPropertiesToRect(screen.geometry);
   const sC = rectCenter(sG);
+  const oppositeCorners = getOppositeCorners(corner);
   let screens: [KWin.Output, Qt.Corner][] = [];
 
   for (const i of workspace.screens) {
     if (i === screen) continue;
 
     const iG = addMissingPropertiesToRect(i.geometry);
-    const oppositeCorners = getOppositeCorners(corner);
     let direction: [Boolean, Boolean] = [false, false];
 
     switch (corner) {
       case Qt.Corner.TopLeft:
-        direction = [iG.bottom < sG.top, iG.right < sG.left];
+        direction = [iG.bottom <= sG.top, iG.right <= sG.left];
         break;
       case Qt.Corner.TopRight:
-        direction = [iG.bottom < sG.top, iG.left > sG.right];
+        direction = [iG.bottom <= sG.top, iG.left >= sG.right];
         break;
       case Qt.Corner.BottomLeft:
-        direction = [iG.top > sG.bottom, iG.right < sG.left];
+        direction = [iG.top >= sG.bottom, iG.right <= sG.left];
         break;
       case Qt.Corner.BottomRight:
-        direction = [iG.top > sG.bottom, iG.left > sG.right];
+        direction = [iG.top >= sG.bottom, iG.left >= sG.right];
         break;
     }
 
